@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-webapi
+  namespace: test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: test-webapi
+  template:
+    metadata:
+      labels:
+        app: test-webapi
+    spec:
+      containers:
+      - name: test-webapi
+        image: igrwijaya/webapi-mysqltest:latest
+        ports:
+        - containerPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: test-webapi
+  namespace: test
+spec:
+  selector:
+    app: test-webapi
+  ports:
+    - port: 80
+      targetPort: 3000
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: test-webapi-ingress
+  namespace: test
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+spec:
+  rules:
+    - host: api-mysql.example.local
+      http:
+        paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: test-webapi
+              port:
+                number: 80
