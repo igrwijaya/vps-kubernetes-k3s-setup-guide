@@ -13,6 +13,8 @@ spec:
       labels:
         app: app1
     spec:
+      nodeSelector:
+        workload: app
       containers:
       - name: nginx
         image: nginx

@@ -50,6 +50,12 @@ After installed, check the node:
 kubectl get nodes
 ```
 
+If encountering an error like `WARN[0000] Unable to read /etc/rancher/k3s/k3s.yaml, please start server with --write-kubeconfig-mode or --write-kubeconfig-group to modify kube config permissions`, you can uninstall and reinstall with the right flag:
+
+```bash
+curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--write-kubeconfig-mode 644" sh -
+```
+
 Exit:
 
 ```bash
@@ -124,3 +130,12 @@ kubectl get nodes
 ```
 
 ✅ You should now see 3 nodes (1 master, 2 workers) **Ready**!
+
+## Adding Labels to Nodes
+nodes label will be helpful to distribute apps and backend infrastructure such as databases, caches, etc. Here the command:
+
+```bash
+kubectl label nodes <worker-node-1-name> workload=app
+kubectl label nodes <worker-node-2-name> workload=data
+
+```

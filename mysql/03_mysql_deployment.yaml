@@ -26,6 +26,8 @@ spec:
       labels:
         app: mysql
     spec:
+      nodeSelector:
+        workload: data
       containers:
       - image: mysql:8
         name: mysql

@@ -13,6 +13,8 @@ spec:
       labels:
         app: test-webapi
     spec:
+      nodeSelector:
+        workload: app
       containers:
       - name: test-webapi
         image: igrwijaya/webapi-mysqltest:latest
