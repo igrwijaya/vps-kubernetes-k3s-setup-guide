@@ -1,0 +1,56 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: mysql-backup
+  namespace: core-infrastructure
+spec:
+  schedule: "0 */6 * * *"  # Every 6 hours
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          nodeSelector:
+            workload: data
+          containers:
+          - name: mysql-backup
+            image: databack/mysql-backup:1.2.2
+            args: ["dump"]
+            env:
+            - name: DB_DUMP_ONCE
+              value: "true"
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-backup-secret
+                  key: DB_USER
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-backup-secret
+                  key: DB_PASS
+            - name: DB_SERVER
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-backup-secret
+                  key: DB_SERVER
+            - name: DB_DUMP_TARGET
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-backup-secret
+                  key: DB_DUMP_TARGET
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-backup-secret
+                  key: S3_ACCESS_KEY_ID
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-backup-secret
+                  key: S3_SECRET_ACCESS_KEY
+            - name: AWS_ENDPOINT_URL
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-backup-secret
+                  key: S3_ENDPOINT_URL
+          restartPolicy: OnFailure
