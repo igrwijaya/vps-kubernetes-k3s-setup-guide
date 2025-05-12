@@ -48,9 +48,9 @@ spec:
                 secretKeyRef:
                   name: mysql-backup-secret
                   key: S3_SECRET_ACCESS_KEY
-            - name: AWS_ENDPOINT_URL
+            - name: AWS_REGION
               valueFrom:
                 secretKeyRef:
                   name: mysql-backup-secret
-                  key: S3_ENDPOINT_URL
+                  key: AWS_REGION
           restartPolicy: OnFailure
