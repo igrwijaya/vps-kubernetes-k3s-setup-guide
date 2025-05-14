@@ -17,6 +17,13 @@ If it's type: LoadBalancer, you can patch it:
 kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "ClusterIP"}}'
 ```
 
+### Enable HTTP 80 Access
+```bash
+kubectl -n argocd patch deployment argocd-server \
+  --type='json' \
+  -p='[{"op":"add","path":"/spec/template/spec/containers/0/args/-","value":"--insecure"}]'
+```
+
 ### Get the Initial Admin Password
 The default username is `admin`.
 To get the password:
@@ -24,3 +31,4 @@ To get the password:
 ```bash
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d && echo
 ```
+
